@@ -6,7 +6,7 @@ pipeline {
             steps {
                 git branch: 'main',
                     url: 'https://github.com/KirillLyanoy/RGR',
-                    credentialsId: 'ac935320-22e6-421e-b058-48bf9380e360'
+                    credentialsId: 'bdc4046a-c3f2-47b0-a972-cbf9f15083ce'
             }
         }
         stage('Build') {
