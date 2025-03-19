@@ -1,23 +1,26 @@
 pipeline {
     agent any
-
     stages {
-        stage('Build') {
+        stage('Checkout') {
             steps {
-                echo 'Building...'
-                sh 'docker build -t rgr .'
+                git branch: 'main', url: 'https://github.com/KirillLyanoy/RGR'
             }
         }
-        stage('Test') {
+        stage('Build with Maven') {
             steps {
-                echo 'Testing...'
-                sh 'docker run rgr ./run-tests.sh'
+                sh 'mvn clean package'
             }
         }
-        stage('Deploy') {
+        stage('Build Docker Image') {
             steps {
-                echo 'Deploying...'
-                sh 'docker-compose down && docker-compose up -d'
+                sh 'docker build -t rgr:latest .'
+            }
+        }
+        stage('Deploy Docker Container') {
+            steps {
+                sh 'docker stop your-app || true'
+                sh 'docker rm your-app || true'
+                sh 'docker run -d --name your-app -p 8081:8081 rgr:latest'
             }
         }
     }
