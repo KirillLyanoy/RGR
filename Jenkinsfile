@@ -2,13 +2,10 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
             steps {
-                checkout([$class: 'GitSCM', 
-                          branches: [[name: '*/main']], 
-                          userRemoteConfigs: [[url: 'https://github.com/KirillLyanoy/RGR', 
-                                               credentialsId: 'ac935320-22e6-421e-b058-48bf9380e360']]
-                ])
+                git branch: 'main',
+                    url: 'https://github.com/KirillLyanoy/RGR',
+                    credentialsId: 'ac935320-22e6-421e-b058-48bf9380e360'
             }
         }
         stage('Build') {
