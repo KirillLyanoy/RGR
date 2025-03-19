@@ -5,13 +5,13 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building...'
-                sh 'docker build -t my-app .'
+                sh 'docker build -t rgr .'
             }
         }
         stage('Test') {
             steps {
                 echo 'Testing...'
-                sh 'docker run my-app ./run-tests.sh'
+                sh 'docker run rgr ./run-tests.sh'
             }
         }
         stage('Deploy') {
