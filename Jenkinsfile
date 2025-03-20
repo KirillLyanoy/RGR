@@ -13,8 +13,9 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh 'docker stop my-app || true'
-                sh 'docker rm my-app || true'
+                sh 'docker stop my-app || true' // Игнорировать ошибку, если контейнер не существует
+                sh 'docker rm my-app || true'   // Игнорировать ошибку, если контейнер не существует
+                sh 'docker network create app-network || true' // Создать сеть, если она ещё не существует
                 sh 'docker run -d --name my-app --network app-network my-app:latest'
             }
         }
