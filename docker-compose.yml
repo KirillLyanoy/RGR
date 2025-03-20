@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "8081:443"  # Nginx слушает 8081 на хосте, 443 внутри
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/certs:/etc/nginx/certs
+    depends_on:
+      - jenkins
+    networks:
+      - app-network
+
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    volumes:
+      - jenkins_data:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=true
+    networks:
+      - app-network
+    user: root
+
+  my-app:
+    image: my-app:latest
+    container_name: my-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - app-network
+
+volumes:
+  jenkins_data:
+
+networks:
+  app-network:
+    driver: bridge
