@@ -1,24 +1,21 @@
 pipeline {
     agent any
-
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main',
-                    url: 'https://github.com/KirillLyanoy/RGR',
-                    credentialsId: 'bdc4046a-c3f2-47b0-a972-cbf9f15083ce'
+                git url: 'https://github.com/KirillLyanoy/RGR.git', branch: 'main'
             }
         }
-        stage('Build') {
+        stage('Build Docker Image') {
             steps {
-                echo 'Building...'
                 sh 'docker build -t my-app:latest .'
             }
         }
         stage('Deploy') {
             steps {
-                echo 'Deploying...'
-                sh 'docker-compose up -d --no-deps --build my-app'  # Обновляем только my-app
+                sh 'docker stop my-app || true'
+                sh 'docker rm my-app || true'
+                sh 'docker run -d --name my-app --network app-network my-app:latest'
             }
         }
     }
